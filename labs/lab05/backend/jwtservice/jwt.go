@@ -7,14 +7,10 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-// JWTService handles JWT token operations
 type JWTService struct {
 	secretKey string
 }
 
-// NewJWTService creates a new JWT service
-// Requirements:
-// - secretKey must not be empty
 func NewJWTService(secretKey string) (*JWTService, error) {
 	if secretKey == "" {
 		return nil, errors.New("secret key cannot be empty")
@@ -22,12 +18,6 @@ func NewJWTService(secretKey string) (*JWTService, error) {
 	return &JWTService{secretKey: secretKey}, nil
 }
 
-// GenerateToken creates a new JWT token with user claims
-// Requirements:
-// - userID must be positive
-// - email must not be empty
-// - Token expires in 24 hours
-// - Use HS256 signing method
 func (j *JWTService) GenerateToken(userID int, email string) (string, error) {
 	if userID <= 0 {
 		return "", errors.New("userID must be positive")
@@ -49,11 +39,6 @@ func (j *JWTService) GenerateToken(userID int, email string) (string, error) {
 	return t.SignedString([]byte(j.secretKey))
 }
 
-// ValidateToken parses and validates a JWT token
-// Requirements:
-// - Check token signature with secret key
-// - Verify token is not expired
-// - Return parsed claims on success
 func (j *JWTService) ValidateToken(tokenString string) (*Claims, error) {
 	if tokenString == "" {
 		return nil, ErrEmptyToken
